@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#eef8fa">
+<meta name="description" content="5問だけ、夢中になろう。Part 5を音と光で楽しむ個人用学習ゲーム。">
+<meta name="color-scheme" content="dark"><title>PART 5 BURST</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg"><link rel="apple-touch-icon" href="assets/icons/icon-192.png"><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<canvas id="ambient" aria-hidden="true"></canvas>
+<div class="shell">
+<header class="topbar"><button class="brand" id="brand" aria-label="トップへ"><img src="assets/icons/icon.svg" width="32" height="32" alt=""><span>PART 5 <b>BURST</b></span></button><button class="icon-button" id="open-settings" aria-label="設定"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16M8 4v6m8 4v6"/></svg></button></header>
+<main id="main" tabindex="-1">
+<section id="home" class="view">
+<div class="eyebrow"><span class="dot"></span> TOEIC READING · PART 5</div>
+<div class="hero"><div class="hero-mark" aria-hidden="true"><span>5</span><svg viewBox="0 0 100 100"><path d="M62 5 23 56h28L40 95l40-55H53z"/></svg></div><div class="hero-copy"><p class="micro">A LITTLE PLAY. A BIG STEP.</p><h1>5問だけ、<br><em>夢中になろう。</em></h1><p class="subtitle">ひらめく。選ぶ。コンボがつながる。<br>音と光で、英語がもっと楽しくなる。</p></div></div>
+<div class="personal-stats"><div><span>今日の正解</span><strong id="today-correct">0<small>問</small></strong></div><div><span>5問 BEST</span><strong id="home-best">—</strong></div><div><span>MAX COMBO</span><strong id="home-combo">—</strong></div></div>
+<div class="play-actions"><button class="primary start" data-count="5"><span><b>5問で遊ぶ</b><small>まずは気軽に、ワンプレイ</small></span><span class="play-arrow">↗</span></button><button class="secondary start" data-count="10"><span>10問に挑戦</span><span class="pill">FEVERを狙う ⚡</span><span>→</span></button></div>
+<div class="track-card"><div class="track-icon" aria-hidden="true">♫</div><div class="track-info"><label for="home-track">PLAY WITH MUSIC</label><select id="home-track" aria-label="BGMを選択"></select><p id="track-mood"></p></div><button class="icon-button" id="preview-track" aria-label="BGMを試聴">▷</button></div>
+<div class="home-footer"><button id="open-history">↗ 学習履歴</button><span id="question-count">問題を読み込み中…</span></div><p class="tiny center">2 GOOD <i>→</i> 3 GREAT <i>→</i> 4 EXCELLENT <i>→</i> 5 PERFECT</p>
+</section>
+<section id="play" class="view" hidden>
+<div class="play-top"><button class="text-button" id="pause">Ⅱ 一時停止</button><span id="question-progress">01 / 05</span><span id="play-score">0 <small>PTS</small></span></div><div class="progress-track"><div id="progress-bar"></div></div>
+<div class="combo-area"><div><span class="micro">COMBO</span><strong id="combo-number">0</strong></div><span id="combo-tier">LET’S GO</span><div id="fever-time" hidden>FEVER <span></span>s</div></div>
+<div class="question-card"><div class="question-meta"><span id="question-category"></span><span>CHOOSE THE BEST ANSWER</span></div><p id="question-text" lang="en"></p></div>
+<div id="choices" class="choices"></div>
+<div id="feedback" aria-live="polite" class="feedback"></div><div class="play-bottom"><span id="elapsed">0.0 sec</span><span>急がなくても大丈夫。正確さから。</span></div>
+</section>
+<section id="result" class="view" hidden></section>
+<section id="history" class="view" hidden><div class="section-top"><button class="text-button back-home">← トップ</button><span class="micro">YOUR PROGRESS</span></div><h1 class="page-title">積み重ねた、<em>ひらめき。</em></h1><div id="history-content"></div></section>
+</main>
+<footer class="signature">YUU <span> / </span> PART 5 BURST <span> / </span> v1.0</footer>
+</div>
+<div id="reward" aria-hidden="true"></div><div id="toast" role="status" hidden></div>
+<dialog id="settings-dialog"><div class="dialog-head"><h2>設定</h2><button class="icon-button" id="close-settings" aria-label="閉じる">✕</button></div><form id="settings-form">
+<h3>AUDIO</h3><label class="setting">BGM<input type="checkbox" name="bgm"></label><label class="setting range">BGM音量 <output id="bgm-volume-value"></output><input type="range" min="0" max="1" step="0.01" name="bgmVolume"></label><label class="setting">BGM選択<select name="track" aria-label="設定のBGM選択"></select></label><label class="setting">効果音<input type="checkbox" name="se"></label><label class="setting range">効果音量 <output id="se-volume-value"></output><input type="range" min="0" max="1" step="0.01" name="seVolume"></label><button type="button" class="small-button" id="test-se">効果音を試す ✦</button>
+<h3>VISUAL</h3><label class="setting">BGM連動背景<input type="checkbox" name="background"></label><label class="setting">波形表示<input type="checkbox" name="waveform"></label><label class="setting">エフェクト強度<select name="effects"><option>LOW</option><option>NORMAL</option><option>HIGH</option></select></label>
+<h3>DATA</h3><div class="storage-card"><p id="storage-status">永続化状態を確認中…</p><p id="storage-size" class="tiny"></p><button type="button" class="small-button" id="request-persist">永続化を申請</button></div><p class="tiny">履歴はこの端末に保存。永続化の許可はブラウザが判断します。サイトデータを手動で削除すると履歴も消えます。</p><p class="tiny">ホーム画面に追加：Chromeのメニュー →「ホーム画面に追加」または「アプリをインストール」</p><button type="button" id="install-app" class="small-button" hidden>ホーム画面に追加</button>
+</form></dialog>
+<dialog id="pause-dialog"><p class="micro">TAKE A BREATH</p><h2>ひと休みしよう。</h2><p>音楽も回答時間も、一時停止中。</p><button id="resume" class="primary">続ける →</button><button id="exit-game" class="text-button">このプレイを終了してトップへ</button><p class="tiny">途中のプレイは成績に含めません。</p></dialog>
+<noscript>このアプリを利用するにはJavaScriptを有効にしてください。</noscript><script type="module" src="src/app.js"></script>
+</body></html>

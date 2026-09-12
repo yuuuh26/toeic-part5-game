@@ -1,1 +1,62 @@
-# toeic-part5-game
+# PART 5 BURST
+
+Android Chromeを中心に、短いPart 5練習を音と光で楽しむ個人用PWA。
+
+## 使い方
+
+5問または10問を選び、英文の空欄に合う選択肢をタップ。2連続でGOOD、3でGREAT、4でEXCELLENT、5でPERFECT、6でFEVER。FEVERは10秒間、得点1.5倍。不正解で終了します。5問モードの到達点はPERFECTです。
+
+正解後520ms、不正解後1450msで次問へ。解説・訳・自分の回答は結果画面で開けます。途中で離れた場合は音声と回答時間を一時停止。完了したプレイだけ履歴に残ります。
+
+添付いただいたMP3を無改変で4曲収録。選択曲だけをデコードして再生します。ループ境界のクリック音を避けるため再生バッファの両端5msにランプを適用。原本ファイルは変更しません。BGMの厳密な拍単位のループ位置は音源に依存します。初期選択は The Winning Move。SEは本アプリ用に生成した8ファイルです。
+
+## 保存・プライバシー
+
+- IndexedDB `part5-burst` v1: `sessions`（key: id、date索引）と`settings`。
+- 1プレイ全体を単一のトランザクションで保存。各回答に問題のスナップショットを保持し、問題更新後も当時の解説を表示。
+- プレイ開始時に `navigator.storage.persist()` で永続化を申請。設定で状態表示・再申請。許可は端末のブラウザが決定し、手動でのサイトデータ削除は防げません。
+- 保存失敗は画面に明示し、結果画面から再試行可能。保存を成功扱いしません。
+- 履歴・設定を外部送信しません。アカウント、外部API、計測SDK、外部フォントはありません。
+- Service Workerはアプリ本体・問題・SEをキャッシュ。BGMは再生のため取得した曲だけキャッシュされ、次回以降オフライン再生できます。未取得曲はオフライン時に再生できません。
+- `noindex,nofollow`は検索向けの指示であり、アクセス制限ではありません。公開コードと音源はGitHub Pages上で閲覧可能です。
+
+## 構成と変更箇所
+
+| ファイル | 役割 |
+| --- | --- |
+| `src/config.js` | コンボ条件、FEVER、得点、時間、音量、音源一覧、演出強度 |
+| `src/game.js` | 正誤判定、状態遷移、時間計測、コンボ・FEVER・得点 |
+| `src/events.js` | 拡張用イベントバス |
+| `src/questions.js` | パック読み込み、形式検証、重複なしランダム出題 |
+| `src/audio.js` | BGMデコード・ループ、SEプリロード、Ducking、音量ランプ、周波数解析 |
+| `src/effects.js` | 背景・波形・パーティクル。30fps、描画倍率上限1.5、粒子上限200 |
+| `src/storage.js` | IndexedDB、トランザクション、永続化申請 |
+| `src/app.js` | 画面、設定、履歴・カテゴリ集計、操作の接続 |
+| `styles.css` | スマホ中心の外観。拡大操作対応、動きの軽減設定を尊重 |
+
+イベント: `question`, `answer`, `correct`, `incorrect`, `combo:increase`, `combo:end`, `perfect`, `fever:start`, `fever:end`, `finish`。新しい演出は購読を追加できます。
+
+スコアは正解時に `1000 + 速度ボーナス(最大500、20秒で0) + コンボボーナス(100×連続数-1、最大500)`。FEVER時1.5倍。自己ベストは同じモード・問題数で比較します。問題構成・難度による差はあるため、正答率と回答時間も一緒に確認できます。
+
+## 問題追加
+
+`data/manifest.json` の `packs` に新しいJSONファイル名を追加。パックは `{"questions":[...]}`。
+
+各問題: `id`（全パックで一意）、`text`（`_____`を含む）、`options`（4文字列）、`answer`（0〜3）、`translation`、`explanation`、`category`、`difficulty`（1:基礎、2:標準）。既存IDは再利用せず、過去問題の意味を変えないでください。カテゴリはデータから自動集計します。
+
+問題の翻訳は正解を補った全文の意味です。初期30問は独自作成で、公式TOEIC問題の転載ではありません。TOEIC公式サービスとは関係ありません。
+
+## 音源・SEの追加
+
+BGMは `assets/bgm/` に配置し、`CONFIG.tracks` に追記。SEは `assets/se/*.wav` を差し替え、必要なら `CONFIG.seFiles` を変更。生成スクリプトは `scripts/generate-assets.py`（NumPy）、PNGアイコン生成は `scripts/render-icons.cjs`（sharp）。本体はビルド不要・依存ライブラリなしです。
+
+## 開発・公開
+
+```sh
+python3 -m http.server 8000
+node --test tests/*.test.js
+```
+
+GitHub Actions `pages.yml` がテスト後に静的ファイルのみ公開します。GitHubの Settings → Pages → Source を GitHub Actions に設定してください（初回のPages有効化は通常のGITHUB_TOKENではできません）。
+
+アップデート時は `sw.js` のVERSIONを上げ、アプリ本体の追加ファイルをCOREへ登録。古いタブが閉じられると新バージョンが有効になります。他アプリのキャッシュは削除しません。DB更新では新しいversionのonupgradeneeded内で既存ストアを残して追加移行してください。ユーザーの保存内容を初期化しないでください。

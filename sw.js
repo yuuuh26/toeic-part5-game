@@ -1,4 +1,4 @@
-const VERSION='part5-burst-v1.0.3';
+const VERSION='part5-burst-v1.0.4';
 const CORE=['./','index.html','styles.css','manifest.webmanifest','src/app.js','src/config.js','src/events.js','src/storage.js','src/session-save.js','src/questions.js','src/game.js','src/audio.js','src/effects.js','data/manifest.json','data/starter.json','assets/icons/icon.svg','assets/icons/icon-192.png','assets/icons/icon-512.png',...['correct','good','great','excellent','perfect','fever','wrong','record'].map(n=>`assets/se/${n}.wav`)];
 self.addEventListener('install',e=>e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE))));
 self.addEventListener('activate',e=>e.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith('part5-burst-v')&&name!==VERSION){const old=await caches.open(name),current=await caches.open(VERSION);for(const request of await old.keys()){const url=new URL(request.url);if(url.href.startsWith(new URL('assets/bgm/',self.registration.scope).href)&&!await current.match(request)){const response=await old.match(request);if(response)await current.put(request,response);}}await caches.delete(name);}await self.clients.claim();})()));

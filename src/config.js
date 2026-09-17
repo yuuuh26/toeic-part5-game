@@ -1,5 +1,5 @@
 export const CONFIG = Object.freeze({
- version:'1.0.6', questionCounts:[5,10], defaultCount:5,
+ version:'1.0.7', questionCounts:[5,10], defaultCount:5,
  transitions:{correct:520,incorrect:1450},
  combo:[{at:1,label:'CORRECT',color:'#60f4dc'},{at:2,label:'GOOD',color:'#60f4dc'},{at:3,label:'GREAT',color:'#6bc9ff'},{at:4,label:'EXCELLENT',color:'#d398ff'},{at:5,label:'PERFECT',color:'#ffe38b'},{at:6,label:'FEVER',color:'#ffbf69'}],
  fever:{threshold:6,duration:10000,multiplier:1.5},

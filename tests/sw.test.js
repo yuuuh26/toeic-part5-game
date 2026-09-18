@@ -22,10 +22,10 @@ test('an update keeps downloaded music and leaves other apps caches untouched',a
  await old.put('assets/bgm/the-winning-move.mp3',new Response('music'));await old.put('src/app.js',new Response('old app'));
  await caches.open('another-app-v1');let done;handlers.activate({waitUntil:p=>done=p});await done;
  assert.equal(stores.has('part5-burst-v1.0.0'),false);assert.equal(stores.has('another-app-v1'),true);
- const current=await caches.open('part5-burst-v1.0.8');assert.equal(await (await current.match('assets/bgm/the-winning-move.mp3')).text(),'music');assert.equal(await current.match('src/app.js'),undefined);
+ const current=await caches.open('part5-burst-v1.0.9');assert.equal(await (await current.match('assets/bgm/the-winning-move.mp3')).text(),'music');assert.equal(await current.match('src/app.js'),undefined);
 });
 test('cache quota errors do not turn successful network requests into failures',async()=>{
  const response={ok:true,type:'basic',clone(){return this;},text:async()=> 'music'};
- const {handlers,caches}=setup(async()=>response);const current=await caches.open('part5-burst-v1.0.8');current.put=async()=>{throw Error('quota');};
+ const {handlers,caches}=setup(async()=>response);const current=await caches.open('part5-burst-v1.0.9');current.put=async()=>{throw Error('quota');};
  let done;handlers.fetch({request:new Request(scope+'assets/bgm/rapid-ascent.mp3'),respondWith:p=>done=p});assert.equal(await done,response);
 });

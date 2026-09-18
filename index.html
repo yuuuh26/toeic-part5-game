@@ -30,9 +30,10 @@
 <section id="result" class="view" hidden></section>
 <section id="history" class="view" hidden><div class="section-top"><button class="text-button back-home">← トップ</button><span class="micro">YOUR PROGRESS</span></div><h1 class="page-title">積み重ねた、<em>ひらめき。</em></h1><div id="history-content"></div></section>
 </main>
-<footer class="signature">YUU <span> / </span> PART 5 BURST <span> / </span> v1.0.8</footer>
+<footer class="signature">YUU <span> / </span> PART 5 BURST <span> / </span> v1.0.9</footer>
 </div>
 <div id="reward" aria-hidden="true"></div><div id="toast" role="status" hidden></div>
+<div id="slow-review-overlay" class="slow-review-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="slow-review-title"><div class="slow-review-card"><div class="slow-review-kicker">⏱ 20秒超 · REVIEW</div><h2 id="slow-review-title">ここは、もう一度。</h2><p id="slow-review-english" class="slow-review-english" lang="en"></p><div class="slow-review-translation-box"><span>日本語訳</span><p id="slow-review-translation"></p></div><div id="slow-review-audio" class="slow-review-audio">🔊 正しい英文を読み上げています</div><button type="button" id="slow-review-close" class="slow-review-close">確認した →</button></div></div>
 <dialog id="settings-dialog"><div class="dialog-head"><h2>設定</h2><button class="icon-button" id="close-settings" aria-label="閉じる">✕</button></div><form id="settings-form">
 <h3>AUDIO</h3><label class="setting">BGM<input type="checkbox" name="bgm"></label><label class="setting range">BGM音量 <output id="bgm-volume-value"></output><input type="range" min="0" max="1" step="0.01" name="bgmVolume"></label><label class="setting">BGM選択<select name="track" aria-label="設定のBGM選択"></select></label><label class="setting">効果音<input type="checkbox" name="se"></label><label class="setting range">効果音量 <output id="se-volume-value"></output><input type="range" min="0" max="1" step="0.01" name="seVolume"></label><button type="button" class="small-button" id="test-se">効果音を試す ✦</button>
 <h3>VISUAL</h3><label class="setting">BGM連動背景<input type="checkbox" name="background"></label><label class="setting">波形表示<input type="checkbox" name="waveform"></label><label class="setting">エフェクト強度<select name="effects"><option>LOW</option><option>NORMAL</option><option>HIGH</option></select></label>
